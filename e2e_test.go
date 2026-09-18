@@ -21,7 +21,7 @@ func testClient(t *testing.T) *appsignal.Client {
 		t.Skip("APPSIGNAL_API_TOKEN not set, skipping end-to-end test")
 	}
 
-	return appsignal.NewClient(token)
+	return appsignal.NewClient(appsignal.HostURL, token)
 }
 
 func TestMain(m *testing.M) {

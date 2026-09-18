@@ -19,9 +19,13 @@ type Client struct {
 	Token      string
 }
 
-func NewClient(token string) *Client {
+func NewClient(host, token string) *Client {
+	if host == "" {
+		host = HostURL
+	}
+
 	return &Client{
-		HostURL:    HostURL,
+		HostURL:    host,
 		HTTPClient: http.DefaultClient,
 		Token:      token,
 	}
