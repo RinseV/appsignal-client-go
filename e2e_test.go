@@ -12,6 +12,7 @@ import (
 
 const testAppID = "6aad24d1ba6bc351255e7cb5"
 const testOrganizationSlug = "terraform-test"
+const testAppLogSourceID = "6aad24d1ba6bc351255e7cba"
 
 func testClient(t *testing.T) *appsignal.Client {
 	t.Helper()
