@@ -64,3 +64,67 @@ func (c *Client) GetOrganizationApps(ctx context.Context, slug string) ([]App, e
 
 	return out.Organization.Apps, nil
 }
+
+const createAppMutation = `
+mutation CreateApp($organizationSlug: String!, $name: String!, $environment: String!) {
+	createApp(organizationSlug: $organizationSlug, name: $name, environment: $environment) {
+		id
+		environment
+		name
+		createdAt
+		updatedAt
+	}
+}
+`
+
+type CreateAppInput struct {
+	OrganizationSlug string `json:"organizationSlug"`
+	Name             string `json:"name"`
+	Environment      string `json:"environment"`
+}
+
+func (c *Client) CreateApp(ctx context.Context, input CreateAppInput) (*App, error) {
+	var out struct {
+		App *App `json:"createApp"`
+	}
+
+	variables := map[string]any{
+		"organizationSlug": input.OrganizationSlug,
+		"name":             input.Name,
+		"environment":      input.Environment,
+	}
+
+	if err := c.Mutate(ctx, createAppMutation, variables, &out); err != nil {
+		return nil, err
+	}
+
+	return out.App, nil
+}
+
+const deleteAppMutation = `
+mutation DeleteApp($appId: String!) {
+	deleteApp(appId: $appId) {
+		id
+		environment
+		name
+		createdAt
+		updatedAt
+	}
+}
+`
+
+func (c *Client) DeleteApp(ctx context.Context, appID string) (*App, error) {
+	var out struct {
+		App *App `json:"deleteApp"`
+	}
+
+	variables := map[string]any{
+		"appId": appID,
+	}
+
+	if err := c.Mutate(ctx, deleteAppMutation, variables, &out); err != nil {
+		return nil, err
+	}
+
+	return out.App, nil
+}

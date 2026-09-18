@@ -21,7 +21,7 @@ func TestGetOrganization(t *testing.T) {
 	if org.Slug != testOrganizationSlug {
 		t.Errorf("Slug = %s; want %s", org.Slug, testOrganizationSlug)
 	}
-	if org.Name != "Drieam" {
+	if org.Name != "Terraform-Test" {
 		t.Errorf("Name = %s; want %s", org.Name, "Drieam")
 	}
 }

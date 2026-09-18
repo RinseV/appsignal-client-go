@@ -10,8 +10,8 @@ import (
 	appsignal "github.com/RinseV/appsignal-client-go"
 )
 
-const testAppID = "69808b0ce5250a3229a9f634"
-const testOrganizationSlug = "drieam"
+const testAppID = "6aad24d1ba6bc351255e7cb5"
+const testOrganizationSlug = "terraform-test"
 
 func testClient(t *testing.T) *appsignal.Client {
 	t.Helper()
