@@ -81,13 +81,13 @@ func (c *Client) Query(ctx context.Context, query string, variables map[string]a
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u.String(), bytes.NewReader(body))
 	if err != nil {
-		return fmt.Errorf("create request: %w", err)
+		return fmt.Errorf("create request: %w", c.redact(err))
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
-		return fmt.Errorf("do request: %w", err)
+		return fmt.Errorf("do request: %w", c.redact(err))
 	}
 	defer res.Body.Close()
 
@@ -122,3 +122,27 @@ func (c *Client) Query(ctx context.Context, query string, variables map[string]a
 func (c *Client) Mutate(ctx context.Context, mutation string, variables map[string]any, out any) error {
 	return c.Query(ctx, mutation, variables, out)
 }
+
+// redact wraps err so that the token does not appear in its message. The
+// token travels in the URL, and net/http puts the full URL into transport
+// errors, which would otherwise print it into logs.
+func (c *Client) redact(err error) error {
+	if err == nil || c.Token == "" {
+		return err
+	}
+	return &redactedError{err: err, secret: c.Token}
+}
+
+// redactedError hides a secret in the message of the error it wraps. The
+// original error stays reachable through Unwrap, so errors.Is and errors.As
+// keep working on it.
+type redactedError struct {
+	err    error
+	secret string
+}
+
+func (e *redactedError) Error() string {
+	return strings.ReplaceAll(e.err.Error(), e.secret, "REDACTED")
+}
+
+func (e *redactedError) Unwrap() error { return e.err }
