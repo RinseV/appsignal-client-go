@@ -25,7 +25,6 @@ query GetApp($id: String!) {
 }
 `
 
-// GetApp returns the app with the given ID.
 func (c *Client) GetApp(ctx context.Context, id string) (*App, error) {
 	var out struct {
 		App *App `json:"app"`

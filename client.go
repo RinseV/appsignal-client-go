@@ -91,19 +91,25 @@ func (c *Client) Query(ctx context.Context, query string, variables map[string]a
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(res.Body)
+	respBody, err := io.ReadAll(res.Body)
+	if err != nil && res.StatusCode == http.StatusOK {
+		return fmt.Errorf("read response: %w", err)
+	}
+
+	var parsed response
+	decodeErr := json.Unmarshal(respBody, &parsed)
+
+	if res.StatusCode != http.StatusOK && (decodeErr != nil || len(parsed.Errors) == 0) {
 		return &HTTPError{
 			StatusCode: res.StatusCode,
 			Status:     res.Status,
 			Header:     res.Header,
-			Body:       body,
+			Body:       respBody,
 		}
 	}
 
-	var parsed response
-	if err := json.NewDecoder(res.Body).Decode(&parsed); err != nil {
-		return fmt.Errorf("decode response: %w", err)
+	if decodeErr != nil {
+		return fmt.Errorf("decode response: %w", decodeErr)
 	}
 
 	if out != nil && len(parsed.Data) > 0 {
@@ -123,9 +129,6 @@ func (c *Client) Mutate(ctx context.Context, mutation string, variables map[stri
 	return c.Query(ctx, mutation, variables, out)
 }
 
-// redact wraps err so that the token does not appear in its message. The
-// token travels in the URL, and net/http puts the full URL into transport
-// errors, which would otherwise print it into logs.
 func (c *Client) redact(err error) error {
 	if err == nil || c.Token == "" {
 		return err
@@ -133,9 +136,6 @@ func (c *Client) redact(err error) error {
 	return &redactedError{err: err, secret: c.Token}
 }
 
-// redactedError hides a secret in the message of the error it wraps. The
-// original error stays reachable through Unwrap, so errors.Is and errors.As
-// keep working on it.
 type redactedError struct {
 	err    error
 	secret string
