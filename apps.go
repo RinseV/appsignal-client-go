@@ -36,3 +36,31 @@ func (c *Client) GetApp(ctx context.Context, id string) (*App, error) {
 
 	return out.App, nil
 }
+
+const getOrganizationAppsQuery = `
+query GetOrganizationApps($slug: String!) {
+	organization(slug: $slug) {
+		apps {
+			id
+			environment
+			name
+			createdAt
+			updatedAt
+		}
+	}
+}
+`
+
+func (c *Client) GetOrganizationApps(ctx context.Context, slug string) ([]App, error) {
+	var out struct {
+		Organization struct {
+			Apps []App `json:"apps"`
+		} `json:"organization"`
+	}
+
+	if err := c.Query(ctx, getOrganizationAppsQuery, map[string]any{"slug": slug}, &out); err != nil {
+		return nil, err
+	}
+
+	return out.Organization.Apps, nil
+}
