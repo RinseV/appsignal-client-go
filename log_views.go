@@ -2,16 +2,39 @@ package appsignal
 
 import (
 	"context"
+	"encoding/json"
 )
 
 type LogView struct {
 	ID         string        `json:"id"`
 	Name       string        `json:"name"`
-	Query      *string       `json:"query"`
+	Query      string        `json:"query"`
 	Columns    []string      `json:"columns"`
-	LineHeight *string       `json:"lineHeight"`
+	LineHeight string        `json:"lineHeight"`
 	Severities []LogSeverity `json:"severities"`
 	SourceIDs  []string      `json:"sourceIds"`
+}
+
+func (v *LogView) UnmarshalJSON(data []byte) error {
+	type alias LogView
+	var raw struct {
+		alias
+		Query      *string `json:"query"`
+		LineHeight *string `json:"lineHeight"`
+	}
+
+	if err := json.Unmarshal(data, &raw); err != nil {
+		return err
+	}
+
+	*v = LogView(raw.alias)
+	v.Query = deref(raw.Query)
+	v.LineHeight = deref(raw.LineHeight)
+	v.Columns = orEmpty(v.Columns)
+	v.Severities = orEmpty(v.Severities)
+	v.SourceIDs = orEmpty(v.SourceIDs)
+
+	return nil
 }
 
 const getLogViewsQuery = `

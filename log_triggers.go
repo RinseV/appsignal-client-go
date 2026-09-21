@@ -2,20 +2,46 @@ package appsignal
 
 import (
 	"context"
+	"encoding/json"
 )
 
 type LogTrigger struct {
-	ID                       string                        `json:"id"`
-	Name                     string                        `json:"name"`
-	Query                    string                        `json:"query"`
-	SourceIDs                []string                      `json:"sourceIds"`
-	ActionType               LogTriggerActionType          `json:"actionType"`
-	Description              *string                       `json:"description"`
-	NotificationOptions      *LogTriggerNotificationOption `json:"notificationOptions"`
-	NotificationTriggerValue *int32                        `json:"notificationTriggerValue"`
-	Order                    int32                         `json:"order"`
-	Severities               []LogSeverity                 `json:"severities"`
-	Notifiers                []*Notifier                   `json:"notifiers"`
+	ID                       string                       `json:"id"`
+	Name                     string                       `json:"name"`
+	Query                    string                       `json:"query"`
+	SourceIDs                []string                     `json:"sourceIds"`
+	ActionType               LogTriggerActionType         `json:"actionType"`
+	Description              string                       `json:"description"`
+	NotificationOptions      LogTriggerNotificationOption `json:"notificationOptions"`
+	NotificationTriggerValue int32                        `json:"notificationTriggerValue"`
+	Order                    int32                        `json:"order"`
+	Severities               []LogSeverity                `json:"severities"`
+	Notifiers                []Notifier                   `json:"notifiers"`
+}
+
+func (t *LogTrigger) UnmarshalJSON(data []byte) error {
+	type alias LogTrigger
+	var raw struct {
+		alias
+		Description              *string                       `json:"description"`
+		NotificationOptions      *LogTriggerNotificationOption `json:"notificationOptions"`
+		NotificationTriggerValue *int32                        `json:"notificationTriggerValue"`
+		Notifiers                []*Notifier                   `json:"notifiers"`
+	}
+
+	if err := json.Unmarshal(data, &raw); err != nil {
+		return err
+	}
+
+	*t = LogTrigger(raw.alias)
+	t.Description = deref(raw.Description)
+	t.NotificationOptions = deref(raw.NotificationOptions)
+	t.NotificationTriggerValue = deref(raw.NotificationTriggerValue)
+	t.Notifiers = derefSlice(raw.Notifiers)
+	t.SourceIDs = orEmpty(t.SourceIDs)
+	t.Severities = orEmpty(t.Severities)
+
+	return nil
 }
 
 const getLogTriggersQuery = `

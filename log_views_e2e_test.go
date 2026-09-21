@@ -70,15 +70,11 @@ func TestCreateUpdateAndDeleteAppLogView(t *testing.T) {
 	if created.Name != name {
 		t.Errorf("Name = %q, want %q", created.Name, name)
 	}
-	if created.Query == nil {
-		t.Error("Query is nil")
-	} else if *created.Query != query {
-		t.Errorf("Query = %q, want %q", *created.Query, query)
+	if created.Query != query {
+		t.Errorf("Query = %q, want %q", created.Query, query)
 	}
-	if created.LineHeight == nil {
-		t.Error("LineHeight is nil")
-	} else if *created.LineHeight != lineHeight {
-		t.Errorf("LineHeight = %q, want %q", *created.LineHeight, lineHeight)
+	if created.LineHeight != lineHeight {
+		t.Errorf("LineHeight = %q, want %q", created.LineHeight, lineHeight)
 	}
 	if len(created.Columns) != 2 {
 		t.Errorf("Columns = %v, want 2 entries", created.Columns)
@@ -126,15 +122,11 @@ func TestCreateUpdateAndDeleteAppLogView(t *testing.T) {
 	if updated.Name != updatedName {
 		t.Errorf("UpdateAppLogView: Name = %q, want %q", updated.Name, updatedName)
 	}
-	if updated.Query == nil {
-		t.Error("UpdateAppLogView: Query is nil")
-	} else if *updated.Query != updatedQuery {
-		t.Errorf("UpdateAppLogView: Query = %q, want %q", *updated.Query, updatedQuery)
+	if updated.Query != updatedQuery {
+		t.Errorf("UpdateAppLogView: Query = %q, want %q", updated.Query, updatedQuery)
 	}
-	if updated.LineHeight == nil {
-		t.Error("UpdateAppLogView: LineHeight is nil")
-	} else if *updated.LineHeight != updatedLineHeight {
-		t.Errorf("UpdateAppLogView: LineHeight = %q, want %q", *updated.LineHeight, updatedLineHeight)
+	if updated.LineHeight != updatedLineHeight {
+		t.Errorf("UpdateAppLogView: LineHeight = %q, want %q", updated.LineHeight, updatedLineHeight)
 	}
 	if len(updated.Columns) != 3 {
 		t.Errorf("UpdateAppLogView: Columns = %v, want 3 entries", updated.Columns)

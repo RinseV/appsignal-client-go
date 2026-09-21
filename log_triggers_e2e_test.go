@@ -94,15 +94,11 @@ func TestCreateUpdateAndDeleteAppLogTrigger(t *testing.T) {
 	if created.Query != "test" {
 		t.Errorf("Query = %q, want %q", created.Query, "test")
 	}
-	if created.Description == nil {
-		t.Error("Description is nil")
-	} else if *created.Description != description {
-		t.Errorf("Description = %q, want %q", *created.Description, description)
+	if created.Description != description {
+		t.Errorf("Description = %q, want %q", created.Description, description)
 	}
-	if created.NotificationOptions == nil {
-		t.Error("NotificationOptions is nil")
-	} else if *created.NotificationOptions != notificationOptions {
-		t.Errorf("NotificationOptions = %q, want %q", *created.NotificationOptions, notificationOptions)
+	if created.NotificationOptions != notificationOptions {
+		t.Errorf("NotificationOptions = %q, want %q", created.NotificationOptions, notificationOptions)
 	}
 	if len(created.Severities) != 1 || created.Severities[0] != appsignal.SeverityError {
 		t.Errorf("Severities = %v, want %v", created.Severities, []appsignal.LogSeverity{appsignal.SeverityError})
@@ -146,10 +142,8 @@ func TestCreateUpdateAndDeleteAppLogTrigger(t *testing.T) {
 	if updated.Query != updatedQuery {
 		t.Errorf("UpdateAppLogTrigger: Query = %q, want %q", updated.Query, updatedQuery)
 	}
-	if updated.NotificationOptions == nil {
-		t.Error("UpdateAppLogTrigger: NotificationOptions is nil")
-	} else if *updated.NotificationOptions != updatedNotificationOptions {
-		t.Errorf("UpdateAppLogTrigger: NotificationOptions = %q, want %q", *updated.NotificationOptions, updatedNotificationOptions)
+	if updated.NotificationOptions != updatedNotificationOptions {
+		t.Errorf("UpdateAppLogTrigger: NotificationOptions = %q, want %q", updated.NotificationOptions, updatedNotificationOptions)
 	}
 	if len(updated.Severities) != 2 {
 		t.Errorf("UpdateAppLogTrigger: Severities = %v, want 2 entries", updated.Severities)
