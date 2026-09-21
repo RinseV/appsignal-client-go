@@ -1,0 +1,10 @@
+version: "2"
+
+run:
+  build-tags:
+    - e2e
+
+linters:
+  exclusions:
+    presets:
+      - std-error-handling

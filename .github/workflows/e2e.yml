@@ -1,0 +1,36 @@
+name: E2E
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: e2e
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    name: E2E tests
+    runs-on: ubuntu-latest
+    environment: e2e
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+
+      - name: E2E tests
+        env:
+          APPSIGNAL_API_TOKEN: ${{ secrets.APPSIGNAL_API_TOKEN }}
+        run: |
+          if [ -z "$APPSIGNAL_API_TOKEN" ]; then
+            echo "APPSIGNAL_API_TOKEN is not set; add it as a repository secret."
+            exit 1
+          fi
+          go test -tags=e2e -v ./...
