@@ -11,6 +11,27 @@ import (
 	appsignal "github.com/RinseV/appsignal-client-go"
 )
 
+func TestGetAppLogSources(t *testing.T) {
+	client := testClient(t)
+
+	sources, err := client.GetAppLogSources(context.Background(), testAppID)
+	if err != nil {
+		t.Fatalf("GetAppLogSources: %v", err)
+	}
+	if sources == nil {
+		t.Fatal("GetAppLogSources returned no log sources and no error")
+	}
+
+	for _, source := range sources {
+		if source.ID == "" {
+			t.Errorf("source %+v has an empty ID", source)
+		}
+		if source.Name == "" {
+			t.Errorf("source %q has an empty Name", source.ID)
+		}
+	}
+}
+
 func TestGetAppLogSource(t *testing.T) {
 	client := testClient(t)
 
@@ -19,7 +40,7 @@ func TestGetAppLogSource(t *testing.T) {
 		t.Fatalf("GetAppLogSource: %v", err)
 	}
 	if source == nil {
-		t.Fatal("GetAppLogSource returned no app and no error")
+		t.Fatal("GetAppLogSource returned no log source and no error")
 	}
 
 	if source.ID != testAppLogSourceID {

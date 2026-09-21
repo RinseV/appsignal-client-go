@@ -10,6 +10,38 @@ type LogSource struct {
 	Fmt  LogSourceFormat `json:"fmt"`
 }
 
+const getLogSourcesQuery = `
+query GetAppLogSources($appId: String!) {
+	app(id: $appId) {
+		logs {
+			sources {
+				id
+				name
+				key
+				type
+				fmt
+			}
+		}
+	}
+}
+`
+
+func (c *Client) GetAppLogSources(ctx context.Context, appID string) ([]LogSource, error) {
+	var out struct {
+		App struct {
+			Logs struct {
+				LogSources []LogSource `json:"sources"`
+			} `json:"logs"`
+		} `json:"app"`
+	}
+
+	if err := c.Query(ctx, getLogSourcesQuery, map[string]any{"appId": appID}, &out); err != nil {
+		return nil, err
+	}
+
+	return out.App.Logs.LogSources, nil
+}
+
 const getLogSourceQuery = `
 query GetAppLogSource($appId: String!, $logSourceId: String!) {
 	app(id: $appId) {
