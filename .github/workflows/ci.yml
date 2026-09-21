@@ -21,7 +21,7 @@ jobs:
 
       - uses: actions/setup-go@v7
         with:
-          go-version-file: go.mod
+          go-version: stable
 
       - name: Check formatting
         run: |
@@ -47,14 +47,23 @@ jobs:
           version: v2.13.2
 
   test:
-    name: Test
+    name: Test (Go ${{ matrix.go }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The floor declared in go.mod, and whatever is current.
+        go: ['1.24', 'stable']
+    env:
+      # Without this, a go.mod bumped above the floor would make Go silently
+      # download a newer toolchain and the '1.24' leg would stop testing 1.24.
+      GOTOOLCHAIN: local
     steps:
       - uses: actions/checkout@v7
 
       - uses: actions/setup-go@v7
         with:
-          go-version-file: go.mod
+          go-version: ${{ matrix.go }}
 
       - name: Build
         run: go build ./...
