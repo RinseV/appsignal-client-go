@@ -48,9 +48,8 @@ type LogTrigger struct {
 	NotificationOptions      *LogTriggerNotificationOption `json:"notificationOptions"`
 	NotificationTriggerValue *int32                        `json:"notificationTriggerValue"`
 	Order                    int32                         `json:"order"`
-	Severities               []string                      `json:"severities"`
-	Notifiers                []*LogTriggerNotifier         `json:"notifiers"`
 	Severities               []LogSeverity                 `json:"severities"`
+	Notifiers                []*Notifier                   `json:"notifiers"`
 }
 
 const getLogTriggersQuery = `
@@ -71,6 +70,7 @@ query GetAppLogTriggers($appId: String!) {
 				notifiers {
 					id
 					name
+					icon
 				}
 			}
 		}
@@ -130,6 +130,7 @@ mutation CreateLogTrigger(
 		notifiers {
 			id
 			name
+      icon
 		}
 	}
 }
@@ -222,6 +223,7 @@ mutation UpdateLogTrigger(
 		notifiers {
 			id
 			name
+			icon
 		}
 	}
 }
@@ -301,6 +303,7 @@ mutation DeleteLogTrigger(
 		notifiers {
 			id
 			name
+			icon
 		}
 	}
 }
