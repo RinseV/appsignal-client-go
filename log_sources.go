@@ -2,17 +2,6 @@ package appsignal
 
 import "context"
 
-// LogSourceFormat is the log line format of a log source. It maps onto the
-// SourceFormatEnum GraphQL enum.
-type LogSourceFormat string
-
-const (
-	LogSourceFormatPlaintext  LogSourceFormat = "PLAINTEXT"
-	LogSourceFormatLogfmt     LogSourceFormat = "LOGFMT"
-	LogSourceFormatJSON       LogSourceFormat = "JSON"
-	LogSourceFormatAutodetect LogSourceFormat = "AUTODETECT"
-)
-
 type LogSource struct {
 	ID   string          `json:"id"`
 	Name string          `json:"name"`

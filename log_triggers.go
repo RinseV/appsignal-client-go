@@ -4,40 +4,6 @@ import (
 	"context"
 )
 
-type LogTriggerActionType string
-
-const (
-	ActionTypeTrigger LogTriggerActionType = "TRIGGER"
-	ActionTypeFilter  LogTriggerActionType = "FILTER"
-	ActionTypeMetrics LogTriggerActionType = "METRICS"
-)
-
-type LogTriggerNotificationOption string
-
-const (
-	NotificationOptionAlways          LogTriggerNotificationOption = "ALWAYS"
-	NotificationOptionNever           LogTriggerNotificationOption = "NEVER"
-	NotificationOptionFirstInDeploy   LogTriggerNotificationOption = "FIRST_IN_DEPLOY"
-	NotificationOptionFirstAfterClose LogTriggerNotificationOption = "FIRST_AFTER_CLOSE"
-	NotificationOptionNthInHour       LogTriggerNotificationOption = "NTH_IN_HOUR"
-	NotificationOptionNthInDay        LogTriggerNotificationOption = "NTH_IN_DAY"
-)
-
-type LogSeverity string
-
-const (
-	SeverityTrace    LogSeverity = "TRACE"
-	SeverityDebug    LogSeverity = "DEBUG"
-	SeverityInfo     LogSeverity = "INFO"
-	SeverityNotice   LogSeverity = "NOTICE"
-	SeverityWarn     LogSeverity = "WARN"
-	SeverityError    LogSeverity = "ERROR"
-	SeverityCritical LogSeverity = "CRITICAL"
-	SeverityAlert    LogSeverity = "ALERT"
-	SeverityFatal    LogSeverity = "FATAL"
-	SeverityUnknown  LogSeverity = "UNKNOWN"
-)
-
 type LogTrigger struct {
 	ID                       string                        `json:"id"`
 	Name                     string                        `json:"name"`
