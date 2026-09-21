@@ -88,6 +88,7 @@ func (c *Client) Query(ctx context.Context, query string, variables map[string]a
 		return fmt.Errorf("create request: %w", c.redact(err))
 	}
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", userAgent)
 
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
