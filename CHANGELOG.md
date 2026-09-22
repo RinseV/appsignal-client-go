@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/RinseV/appsignal-client-go/compare/v0.1.1...v0.1.2) (2026-09-22)
+
+
+### Documentation
+
+* Add transfer notice ([3f2f249](https://github.com/RinseV/appsignal-client-go/commit/3f2f249839821de7fcd99b8782c8ee971a259ec2))
+
 ## [0.1.1](https://github.com/RinseV/appsignal-client-go/compare/v0.1.0...v0.1.1) (2026-09-22)
 
 
