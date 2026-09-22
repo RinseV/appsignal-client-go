@@ -1,5 +1,8 @@
 # AppSignal API Client (Go)
 
+> [!IMPORTANT]
+> This package has been moved to [Drieam/appsignal-client-go](https://github.com/Drieam/appsignal-client-go). Please use that one instead.
+
 [![Go Reference](https://pkg.go.dev/badge/github.com/RinseV/appsignal-client-go.svg)](https://pkg.go.dev/github.com/RinseV/appsignal-client-go)
 
 A Go client package that can be used to interact with AppSignal's public GraphQL API.
