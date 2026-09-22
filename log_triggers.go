@@ -19,6 +19,8 @@ type LogTrigger struct {
 	Notifiers                []Notifier                   `json:"notifiers"`
 }
 
+// UnmarshalJSON decodes a log trigger, turning nulls from the API into zero
+// values and empty slices.
 func (t *LogTrigger) UnmarshalJSON(data []byte) error {
 	type alias LogTrigger
 	var raw struct {
@@ -70,6 +72,7 @@ query GetAppLogTriggers($appId: String!) {
 }
 `
 
+// GetAppLogTriggers lists every log trigger of an app.
 func (c *Client) GetAppLogTriggers(ctx context.Context, appID string) ([]LogTrigger, error) {
 	var out struct {
 		App struct {
@@ -140,6 +143,8 @@ type CreateAppLogTriggerInput struct {
 	NotifierIDs              []string                      `json:"notifierIds,omitempty"`
 }
 
+// CreateAppLogTrigger adds a new log trigger to an app and returns the created
+// log trigger. Leave the optional input fields nil to let the API pick defaults.
 func (c *Client) CreateAppLogTrigger(ctx context.Context, input CreateAppLogTriggerInput) (*LogTrigger, error) {
 	var out struct {
 		LogTrigger *LogTrigger `json:"createLogTrigger"`
@@ -234,6 +239,9 @@ type UpdateAppLogTriggerInput struct {
 	NotifierIDs              []string                      `json:"notifierIds,omitempty"`
 }
 
+// UpdateAppLogTrigger changes an existing log trigger and returns the updated
+// log trigger. Only the fields you set on the input are sent; the rest stay as
+// they are.
 func (c *Client) UpdateAppLogTrigger(ctx context.Context, input UpdateAppLogTriggerInput) (*LogTrigger, error) {
 	var out struct {
 		LogTrigger *LogTrigger `json:"updateLogTrigger"`
@@ -306,6 +314,8 @@ type DeleteAppLogTriggerInput struct {
 	LogTriggerID string `json:"logTriggerId"`
 }
 
+// DeleteAppLogTrigger removes a log trigger from an app and returns the log
+// trigger as it was just before deletion.
 func (c *Client) DeleteAppLogTrigger(ctx context.Context, input DeleteAppLogTriggerInput) (*LogTrigger, error) {
 	var out struct {
 		LogTrigger *LogTrigger `json:"deleteLogTrigger"`
