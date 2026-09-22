@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/RinseV/appsignal-client-go/compare/v0.1.0...v0.1.1) (2026-09-22)
+
+
+### Documentation
+
+* Improve API documentation ([a7f39bc](https://github.com/RinseV/appsignal-client-go/commit/a7f39bcabcdd2f44aad220263fb98c928b7d5a61))
+
 ## 0.1.0 (2026-09-21)
 
 
