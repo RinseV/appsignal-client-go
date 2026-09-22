@@ -18,6 +18,8 @@ query GetOrganization($slug: String!) {
 }
 `
 
+// GetOrganization looks up a single organization by its slug. It returns a nil
+// organization when no organization with that slug exists.
 func (c *Client) GetOrganization(ctx context.Context, slug string) (*Organization, error) {
 	var out struct {
 		Organization *Organization `json:"organization"`

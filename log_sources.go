@@ -26,6 +26,7 @@ query GetAppLogSources($appId: String!) {
 }
 `
 
+// GetAppLogSources lists every log source of an app.
 func (c *Client) GetAppLogSources(ctx context.Context, appID string) ([]LogSource, error) {
 	var out struct {
 		App struct {
@@ -58,6 +59,8 @@ query GetAppLogSource($appId: String!, $logSourceId: String!) {
 }
 `
 
+// GetAppLogSource looks up a single log source of an app by its ID. It returns a
+// nil log source when the app has no log source with that ID.
 func (c *Client) GetAppLogSource(ctx context.Context, appID string, logSourceID string) (*LogSource, error) {
 	var out struct {
 		App struct {
@@ -93,6 +96,8 @@ type CreateAppLogSourceInput struct {
 	Type  string          `json:"type"`
 }
 
+// CreateAppLogSource adds a new log source to an app and returns the created log
+// source, including the key used to ship logs to it.
 func (c *Client) CreateAppLogSource(ctx context.Context, input CreateAppLogSourceInput) (*LogSource, error) {
 	var out struct {
 		LogSource *LogSource `json:"createLogSource"`
@@ -131,6 +136,9 @@ type UpdateAppLogSourceInput struct {
 	Name        string          `json:"name"`
 }
 
+// UpdateAppLogSource changes the name and format of an existing log source and
+// returns the updated log source. Both fields are required, so pass the current
+// value for anything you do not want to change.
 func (c *Client) UpdateAppLogSource(ctx context.Context, input UpdateAppLogSourceInput) (*LogSource, error) {
 	var out struct {
 		LogSource *LogSource `json:"updateLogSource"`
@@ -167,6 +175,8 @@ type DeleteAppLogSourceInput struct {
 	LogSourceID string `json:"logSourceId"`
 }
 
+// DeleteAppLogSource removes a log source from an app and returns the log source
+// as it was just before deletion.
 func (c *Client) DeleteAppLogSource(ctx context.Context, input DeleteAppLogSourceInput) (*LogSource, error) {
 	var out struct {
 		LogSource *LogSource `json:"deleteLogSource"`

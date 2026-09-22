@@ -19,6 +19,8 @@ type Client struct {
 	Token      string
 }
 
+// NewClient returns a client that talks to the AppSignal GraphQL API using the
+// given personal API token. Pass an empty host to use the default endpoint.
 func NewClient(host, token string) *Client {
 	if host == "" {
 		host = HostURL
@@ -48,6 +50,8 @@ type HTTPError struct {
 	Body       []byte
 }
 
+// Error describes the unexpected HTTP status, including the response body when
+// there is one.
 func (e *HTTPError) Error() string {
 	if len(e.Body) > 0 {
 		return fmt.Sprintf("appsignal: unexpected status %s: %s", e.Status, e.Body)
@@ -61,6 +65,7 @@ type Error struct {
 
 type Errors []Error
 
+// Error joins all GraphQL error messages into a single semicolon-separated string.
 func (e Errors) Error() string {
 	msgs := make([]string, len(e))
 	for i, err := range e {
@@ -69,6 +74,10 @@ func (e Errors) Error() string {
 	return strings.Join(msgs, "; ")
 }
 
+// Query sends a GraphQL query to the API and decodes the "data" field of the
+// response into out. Pass nil for out to ignore the response body. It returns an
+// *HTTPError for non-200 responses without GraphQL errors, and Errors when the
+// API reports GraphQL errors.
 func (c *Client) Query(ctx context.Context, query string, variables map[string]any, out any) error {
 	body, err := json.Marshal(request{Query: query, Variables: variables})
 	if err != nil {
@@ -130,6 +139,8 @@ func (c *Client) Query(ctx context.Context, query string, variables map[string]a
 	return nil
 }
 
+// Mutate sends a GraphQL mutation to the API. It behaves exactly like Query and
+// exists to make calling code read more clearly.
 func (c *Client) Mutate(ctx context.Context, mutation string, variables map[string]any, out any) error {
 	return c.Query(ctx, mutation, variables, out)
 }

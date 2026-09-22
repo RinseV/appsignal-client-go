@@ -18,6 +18,8 @@ query GetViewer {
 }
 `
 
+// GetViewer returns the user that the client's API token belongs to. It is a
+// handy way to check that a token works.
 func (c *Client) GetViewer(ctx context.Context) (*Viewer, error) {
 	var out struct {
 		Viewer *Viewer `json:"viewer"`

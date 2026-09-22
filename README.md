@@ -1,5 +1,7 @@
 # AppSignal API Client (Go)
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/RinseV/appsignal-client-go.svg)](https://pkg.go.dev/github.com/RinseV/appsignal-client-go)
+
 A Go client package that can be used to interact with AppSignal's public GraphQL API.
 
 ## Installation
@@ -37,132 +39,11 @@ func main() {
 }
 ```
 
-### Organizations and apps
+From there the client covers organizations, apps, log sources, log views and log triggers, and lets you send your own queries and mutations for anything it does not wrap yet.
 
-```go
-org, err := client.GetOrganization(ctx, "my-org")
+## Documentation
 
-apps, err := client.GetOrganizationApps(ctx, "my-org")
-for _, app := range apps {
-	fmt.Println(app.ID, app.Name, app.Environment)
-}
-
-app, err := client.GetApp(ctx, "app-id")
-
-app, err = client.CreateApp(ctx, appsignal.CreateAppInput{
-	OrganizationSlug: "my-org",
-	Name:             "my-app",
-	Environment:      "production",
-})
-
-app, err = client.DeleteApp(ctx, app.ID)
-```
-
-### Log sources
-
-```go
-sources, err := client.GetAppLogSources(ctx, appID)
-
-source, err := client.GetAppLogSource(ctx, appID, "source-id")
-
-source, err = client.CreateAppLogSource(ctx, appsignal.CreateAppLogSourceInput{
-	AppID: appID,
-	Name:  "my-source",
-	Type:  "custom",
-	Fmt:   appsignal.LogSourceFormatJSON,
-})
-
-source, err = client.UpdateAppLogSource(ctx, appsignal.UpdateAppLogSourceInput{
-	AppID:       appID,
-	LogSourceID: source.ID,
-	Name:        "renamed-source",
-	Fmt:         appsignal.LogSourceFormatLogfmt,
-})
-
-source, err = client.DeleteAppLogSource(ctx, appsignal.DeleteAppLogSourceInput{
-	AppID:       appID,
-	LogSourceID: source.ID,
-})
-```
-
-### Log views
-
-Optional fields are pointers, so leaving one out means "don't change it".
-
-```go
-query := "error"
-
-views, err := client.GetAppLogViews(ctx, appID)
-
-view, err := client.GetAppLogView(ctx, appID, "view-id")
-
-view, err = client.CreateAppLogView(ctx, appsignal.CreateAppLogViewInput{
-	AppID:      appID,
-	Name:       "Errors",
-	Query:      &query,
-	Severities: []appsignal.LogSeverity{appsignal.SeverityError, appsignal.SeverityFatal},
-})
-
-name := "Errors and warnings"
-view, err = client.UpdateAppLogView(ctx, appsignal.UpdateAppLogViewInput{
-	AppID:     appID,
-	LogViewID: view.ID,
-	Name:      &name,
-})
-
-view, err = client.DeleteAppLogView(ctx, appsignal.DeleteAppLogViewInput{
-	AppID:     appID,
-	LogViewID: view.ID,
-})
-```
-
-### Log triggers
-
-```go
-notifiers, err := client.GetAppNotifiers(ctx, appID)
-
-triggers, err := client.GetAppLogTriggers(ctx, appID)
-
-options := appsignal.NotificationOptionAlways
-trigger, err := client.CreateAppLogTrigger(ctx, appsignal.CreateAppLogTriggerInput{
-	AppID:               appID,
-	Name:                "Too many errors",
-	Query:               "error",
-	Severities:          []appsignal.LogSeverity{appsignal.SeverityError},
-	NotificationOptions: &options,
-	NotifierIDs:         []string{notifiers[0].ID},
-})
-
-triggerName := "Way too many errors"
-trigger, err = client.UpdateAppLogTrigger(ctx, appsignal.UpdateAppLogTriggerInput{
-	AppID:        appID,
-	LogTriggerID: trigger.ID,
-	Name:         &triggerName,
-})
-
-trigger, err = client.DeleteAppLogTrigger(ctx, appsignal.DeleteAppLogTriggerInput{
-	AppID:        appID,
-	LogTriggerID: trigger.ID,
-})
-```
-
-### Errors
-
-The API returns GraphQL errors as `appsignal.Errors` and non-200 responses as `*appsignal.HTTPError`.
-
-```go
-_, err := client.GetApp(ctx, "does-not-exist")
-
-var gqlErrs appsignal.Errors
-var httpErr *appsignal.HTTPError
-
-switch {
-case errors.As(err, &gqlErrs):
-	fmt.Println("api error:", gqlErrs)
-case errors.As(err, &httpErr):
-	fmt.Println("http status:", httpErr.StatusCode)
-}
-```
+The full API reference, with a usage example for every method, lives on [pkg.go.dev](https://pkg.go.dev/github.com/RinseV/appsignal-client-go). The package documentation also covers authentication, pointing the client at a different host, swapping the HTTP client, and telling GraphQL errors apart from HTTP errors.
 
 ## Tests
 

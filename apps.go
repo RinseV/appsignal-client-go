@@ -25,6 +25,8 @@ query GetApp($id: String!) {
 }
 `
 
+// GetApp looks up a single app by its ID. It returns a nil app when no app with
+// that ID exists.
 func (c *Client) GetApp(ctx context.Context, id string) (*App, error) {
 	var out struct {
 		App *App `json:"app"`
@@ -51,6 +53,8 @@ query GetOrganizationApps($slug: String!) {
 }
 `
 
+// GetOrganizationApps lists every app belonging to the organization with the
+// given slug.
 func (c *Client) GetOrganizationApps(ctx context.Context, slug string) ([]App, error) {
 	var out struct {
 		Organization struct {
@@ -83,6 +87,7 @@ type CreateAppInput struct {
 	Environment      string `json:"environment"`
 }
 
+// CreateApp adds a new app to an organization and returns the created app.
 func (c *Client) CreateApp(ctx context.Context, input CreateAppInput) (*App, error) {
 	var out struct {
 		App *App `json:"createApp"`
@@ -113,6 +118,7 @@ mutation DeleteApp($appId: String!) {
 }
 `
 
+// DeleteApp removes an app and returns the app as it was just before deletion.
 func (c *Client) DeleteApp(ctx context.Context, appID string) (*App, error) {
 	var out struct {
 		App *App `json:"deleteApp"`

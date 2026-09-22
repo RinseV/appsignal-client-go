@@ -15,6 +15,8 @@ type LogView struct {
 	SourceIDs  []string      `json:"sourceIds"`
 }
 
+// UnmarshalJSON decodes a log view, turning nulls from the API into empty
+// strings and empty slices.
 func (v *LogView) UnmarshalJSON(data []byte) error {
 	type alias LogView
 	var raw struct {
@@ -53,6 +55,7 @@ query GetAppLogViews($appId: String!) {
 }
 `
 
+// GetAppLogViews lists every log view of an app.
 func (c *Client) GetAppLogViews(ctx context.Context, appID string) ([]LogView, error) {
 	var out struct {
 		App struct {
@@ -83,6 +86,8 @@ query GetAppLogView($appId: String!, $logViewId: String!) {
 }
 `
 
+// GetAppLogView looks up a single log view of an app by its ID. It returns a nil
+// log view when the app has no log view with that ID.
 func (c *Client) GetAppLogView(ctx context.Context, appID string, logViewID string) (*LogView, error) {
 	var out struct {
 		App struct {
@@ -137,6 +142,8 @@ type CreateAppLogViewInput struct {
 	SourceIDs  []string      `json:"sourceIds,omitempty"`
 }
 
+// CreateAppLogView adds a new log view to an app and returns the created log
+// view. Leave the optional input fields nil to let the API pick defaults.
 func (c *Client) CreateAppLogView(ctx context.Context, input CreateAppLogViewInput) (*LogView, error) {
 	var out struct {
 		LogView *LogView `json:"createLogView"`
@@ -213,6 +220,8 @@ type UpdateAppLogViewInput struct {
 	SourceIDs  []string      `json:"sourceIds,omitempty"`
 }
 
+// UpdateAppLogView changes an existing log view and returns the updated log
+// view. Only the fields you set on the input are sent; the rest stay as they are.
 func (c *Client) UpdateAppLogView(ctx context.Context, input UpdateAppLogViewInput) (*LogView, error) {
 	var out struct {
 		LogView *LogView `json:"updateLogView"`
@@ -274,6 +283,8 @@ type DeleteAppLogViewInput struct {
 	LogViewID string `json:"logViewId"`
 }
 
+// DeleteAppLogView removes a log view from an app and returns the log view as it
+// was just before deletion.
 func (c *Client) DeleteAppLogView(ctx context.Context, input DeleteAppLogViewInput) (*LogView, error) {
 	var out struct {
 		LogView *LogView `json:"deleteLogView"`

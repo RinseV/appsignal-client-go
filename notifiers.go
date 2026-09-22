@@ -20,6 +20,8 @@ query GetAppNotifiers($appId: String!) {
 }
 `
 
+// GetAppNotifiers lists the notifiers configured for an app. Their IDs are what
+// you pass when attaching notifiers to a log trigger.
 func (c *Client) GetAppNotifiers(ctx context.Context, appID string) ([]Notifier, error) {
 	var out struct {
 		App struct {
